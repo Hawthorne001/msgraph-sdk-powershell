@@ -103,6 +103,7 @@ directive:
     - MicrosoftGraphPlannerTeamsPublicationInfo
     - MicrosoftGraphWorkbookComment
     - MicrosoftGraphSecurityHost
+    - MicrosoftGraphDomain
   # Set parameter alias
   - where:
       parameter-name: OrderBy
@@ -206,6 +207,10 @@ directive:
       subject: ^(\w*[a-z])GraphOPre(\w*)$
     set:
       subject: $1Of$2
+  - where:
+      subject: ^(\w*[a-z])GraphRPre(\w*)$
+    set:
+      subject: $1Or$2
   - where:
       verb: Clear
       subject: ^UserManagedAppRegistrationByDeviceTag$

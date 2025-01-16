@@ -1363,7 +1363,7 @@ paths:
       tags:
         - communications.call
       summary: Create call
-      description: 'Create call enables your bot to create a new outgoing peer-to-peer or group call, or join an existing meeting. You need to register the calling bot and go through the list of permissions needed.'
+      description: 'Create call enables your bot to create a new outgoing peer-to-peer or group call, or join an existing meeting. You need to register the calling bot and go through the list of permissions needed. This API supports the following PSTN scenarios:'
       externalDocs:
         description: Find more info here
         url: https://learn.microsoft.com/graph/api/application-post-calls?view=graph-rest-beta
@@ -2046,7 +2046,7 @@ paths:
       tags:
         - communications.Actions
       summary: Invoke action answer
-      description: 'Enable a bot to answer an incoming call. The incoming call request can be an invite from a participant in a group call or a peer-to-peer call. If an invite to a group call is received, the notification contains the chatInfo and meetingInfo parameters. The bot is expected to answer, reject or redirect the call before the call times out. The current timeout value is 15 seconds. The current timeout value is 15 seconds for regular scenarios, and 5 seconds for policy-based recording scenarios.'
+      description: 'Enable a bot to answer an incoming call. The incoming call request can be an invitation from a participant in a group call or a peer-to-peer call. If an invitation to a group call is received, the notification contains the chatInfo and meetingInfo parameters. The bot is expected to answer, reject or redirect the call before the call times out. The current timeout value is 15 seconds. The current timeout value is 15 seconds for regular scenarios, and 5 seconds for policy-based recording scenarios. This API supports the following PSTN scenarios:'
       externalDocs:
         description: Find more info here
         url: https://learn.microsoft.com/graph/api/call-answer?view=graph-rest-beta
@@ -3409,10 +3409,10 @@ paths:
       tags:
         - communications.Actions
       summary: Invoke action invite
-      description: 'Delete a specific participant in a call. In some situations, it is appropriate for an application to remove a participant from an active call. This action can be done before or after the participant answers the call. When an active caller is removed, they are immediately dropped from the call with no pre- or post-removal notification. When an invited participant is removed, any outstanding add participant request is canceled.'
+      description: 'Invite participants to the active call. For more information about how to handle operations, see commsOperation.'
       externalDocs:
         description: Find more info here
-        url: https://learn.microsoft.com/graph/api/participant-delete?view=graph-rest-beta
+        url: https://learn.microsoft.com/graph/api/participant-invite?view=graph-rest-beta
       operationId: communication.call.participant_invite
       parameters:
         - name: call-id
@@ -3766,6 +3766,244 @@ paths:
         default:
           $ref: '#/components/responses/error'
       x-ms-docs-operation-type: operation
+  '/communications/onlineMeetings/{onlineMeeting-id}/aiInsights':
+    get:
+      tags:
+        - communications.onlineMeeting
+      summary: Get aiInsights from communications
+      operationId: communication.onlineMeeting_ListAiInsight
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - $ref: '#/components/parameters/top'
+        - $ref: '#/components/parameters/skip'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/count'
+        - name: $orderby
+          in: query
+          description: Order items by property values
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $select
+          in: query
+          description: Select properties to be returned
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $expand
+          in: query
+          description: Expand related entities
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+      responses:
+        2XX:
+          $ref: '#/components/responses/microsoft.graph.callAiInsightCollectionResponse'
+        default:
+          $ref: '#/components/responses/error'
+      x-ms-pageable:
+        nextLinkName: '@odata.nextLink'
+        operationName: listMore
+      x-ms-docs-operation-type: operation
+    post:
+      tags:
+        - communications.onlineMeeting
+      summary: Create new navigation property to aiInsights for communications
+      operationId: communication.onlineMeeting_CreateAiInsight
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+      requestBody:
+        description: New navigation property
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        required: true
+      responses:
+        2XX:
+          description: Created navigation property.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+  '/communications/onlineMeetings/{onlineMeeting-id}/aiInsights/{callAiInsight-id}':
+    get:
+      tags:
+        - communications.onlineMeeting
+      summary: Get aiInsights from communications
+      operationId: communication.onlineMeeting_GetAiInsight
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+        - name: $select
+          in: query
+          description: Select properties to be returned
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $expand
+          in: query
+          description: Expand related entities
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+      responses:
+        2XX:
+          description: Retrieved navigation property
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+    patch:
+      tags:
+        - communications.onlineMeeting
+      summary: Update the navigation property aiInsights in communications
+      operationId: communication.onlineMeeting_UpdateAiInsight
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+      requestBody:
+        description: New navigation property values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        required: true
+      responses:
+        2XX:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+    delete:
+      tags:
+        - communications.onlineMeeting
+      summary: Delete navigation property aiInsights for communications
+      operationId: communication.onlineMeeting_DeleteAiInsight
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+        - name: If-Match
+          in: header
+          description: ETag
+          style: simple
+          schema:
+            type: string
+      responses:
+        2XX:
+          description: Success
+        default:
+          $ref: '#/components/responses/error'
+      x-ms-docs-operation-type: operation
+  '/communications/onlineMeetings/{onlineMeeting-id}/aiInsights/$count':
+    get:
+      tags:
+        - communications.onlineMeeting
+      summary: Get the number of the resource
+      operationId: communication.onlineMeeting.aiInsight_GetCount
+      parameters:
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/filter'
+      responses:
+        2XX:
+          $ref: '#/components/responses/ODataCountResponse'
+        default:
+          $ref: '#/components/responses/error'
   '/communications/onlineMeetings/{onlineMeeting-id}/alternativeRecording':
     get:
       tags:
@@ -6895,7 +7133,7 @@ paths:
       tags:
         - communications.Functions
       summary: Invoke function getAllRecordings
-      description: 'Get all recordings from scheduled onlineMeeting instances for which the specified user is the organizer. This API currently doesn''t support getting call recordings from channel meetings. You can apply the delta function on getAllRecordings to synchronize and get callRecording resources as they''re added for onlineMeeting instances organized by the specified user. The delta query supports both full synchronization and incremental synchronization. Full synchronization gets all the recordings for online meetings organized by the user. Incremental synchronization gets recordings that are added since the last synchronization. Typically, you would do an initial full synchronization, and then get incremental changes to that recording view periodically. Find more information in the delta query documentation. For more examples, see callRecording: delta. To learn more about using the Microsoft Teams export APIs to export content, see Export content with the Microsoft Teams export APIs.'
+      description: 'Get all recordings from scheduled onlineMeeting instances for which the specified user is the organizer. This API currently doesn''t support getting call recordings from channel meetings. You can apply the delta function on getAllRecordings to synchronize and get callRecording resources as they''re added for onlineMeeting instances organized by the specified user. The delta query supports both full synchronization and incremental synchronization. Full synchronization gets all the recordings for online meetings organized by the user. Incremental synchronization gets recordings that are added since the last synchronization. Typically, you do an initial full synchronization, and then get incremental changes to that recording view periodically. Find more information in the delta query documentation. For more examples, see callRecording: delta. To learn more about using the Microsoft Teams export APIs to export content, see Export content with the Microsoft Teams export APIs.'
       externalDocs:
         description: Find more info here
         url: https://learn.microsoft.com/graph/api/onlinemeeting-getallrecordings?view=graph-rest-beta
@@ -6993,7 +7231,7 @@ paths:
       tags:
         - communications.Functions
       summary: Invoke function getAllTranscripts
-      description: 'Get all transcripts from scheduled onlineMeeting instances for which the specified user is the organizer. This API currently doesn''t support getting call transcripts from channel meetings. You can apply the delta function on getAllTranscripts to synchronize and get callTranscript resources as they''re added for onlineMeeting instances organized by the specified user. Delta query supports both full synchronization and incremental synchronization. Full synchronization gets all the transcripts for online meetings organized by the user. Incremental synchronization gets transcripts that are added since the last synchronization. Typically, you would do an initial full synchronization, and then get incremental changes to that recording view periodically. For more information, see delta query. For more examples, see callTranscript: delta. To learn more about using the Microsoft Teams export APIs to export content, see Export content with the Microsoft Teams export APIs.'
+      description: 'Get all transcripts from scheduled onlineMeeting instances for which the specified user is the organizer. This API currently doesn''t support getting call transcripts from channel meetings. You can apply the delta function on getAllTranscripts to synchronize and get callTranscript resources as they''re added for onlineMeeting instances organized by the specified user. Delta query supports both full synchronization and incremental synchronization. Full synchronization gets all the transcripts for online meetings organized by the user. Incremental synchronization gets transcripts that are added since the last synchronization. Typically, you do an initial full synchronization, and then get incremental changes to that recording view periodically. For more information, see delta query. For more examples, see callTranscript: delta. To learn more about using the Microsoft Teams export APIs to export content, see Export content with the Microsoft Teams export APIs.'
       externalDocs:
         description: Find more info here
         url: https://learn.microsoft.com/graph/api/onlinemeeting-getalltranscripts?view=graph-rest-beta
@@ -7527,6 +7765,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.onlineMeetingCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -7561,6 +7804,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}':
     get:
@@ -7615,6 +7863,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -7654,6 +7907,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -7688,7 +7946,328 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
+  '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/aiInsights':
+    get:
+      tags:
+        - users.onlineMeeting
+      summary: Get aiInsights from users
+      operationId: user.onlineMeeting_ListAiInsight
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - $ref: '#/components/parameters/top'
+        - $ref: '#/components/parameters/skip'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/count'
+        - name: $orderby
+          in: query
+          description: Order items by property values
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $select
+          in: query
+          description: Select properties to be returned
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $expand
+          in: query
+          description: Expand related entities
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+      responses:
+        2XX:
+          $ref: '#/components/responses/microsoft.graph.callAiInsightCollectionResponse'
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
+      x-ms-pageable:
+        nextLinkName: '@odata.nextLink'
+        operationName: listMore
+      x-ms-docs-operation-type: operation
+    post:
+      tags:
+        - users.onlineMeeting
+      summary: Create new navigation property to aiInsights for users
+      operationId: user.onlineMeeting_CreateAiInsight
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+      requestBody:
+        description: New navigation property
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        required: true
+      responses:
+        2XX:
+          description: Created navigation property.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
+      x-ms-docs-operation-type: operation
+  '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/aiInsights/{callAiInsight-id}':
+    get:
+      tags:
+        - users.onlineMeeting
+      summary: Get aiInsights from users
+      operationId: user.onlineMeeting_GetAiInsight
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+        - name: $select
+          in: query
+          description: Select properties to be returned
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+        - name: $expand
+          in: query
+          description: Expand related entities
+          style: form
+          explode: false
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              type: string
+      responses:
+        2XX:
+          description: Retrieved navigation property
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
+      x-ms-docs-operation-type: operation
+    patch:
+      tags:
+        - users.onlineMeeting
+      summary: Update the navigation property aiInsights in users
+      operationId: user.onlineMeeting_UpdateAiInsight
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+      requestBody:
+        description: New navigation property values
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        required: true
+      responses:
+        2XX:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
+      x-ms-docs-operation-type: operation
+    delete:
+      tags:
+        - users.onlineMeeting
+      summary: Delete navigation property aiInsights for users
+      operationId: user.onlineMeeting_DeleteAiInsight
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - name: callAiInsight-id
+          in: path
+          description: The unique identifier of callAiInsight
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: callAiInsight
+        - name: If-Match
+          in: header
+          description: ETag
+          style: simple
+          schema:
+            type: string
+      responses:
+        2XX:
+          description: Success
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
+      x-ms-docs-operation-type: operation
+  '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/aiInsights/$count':
+    get:
+      tags:
+        - users.onlineMeeting
+      summary: Get the number of the resource
+      operationId: user.onlineMeeting.aiInsight_GetCount
+      parameters:
+        - name: user-id
+          in: path
+          description: The unique identifier of user
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: user
+        - name: onlineMeeting-id
+          in: path
+          description: The unique identifier of onlineMeeting
+          required: true
+          style: simple
+          schema:
+            type: string
+          x-ms-docs-key-type: onlineMeeting
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/filter'
+      responses:
+        2XX:
+          $ref: '#/components/responses/ODataCountResponse'
+        default:
+          $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/alternativeRecording':
     get:
       tags:
@@ -7723,6 +8302,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -7759,6 +8343,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -7793,6 +8382,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports':
     get:
       tags:
@@ -7857,6 +8451,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.meetingAttendanceReportCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -7899,6 +8498,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports/{meetingAttendanceReport-id}':
     get:
@@ -7961,6 +8565,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -8008,6 +8617,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -8050,6 +8664,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports/{meetingAttendanceReport-id}/attendanceRecords':
     get:
@@ -8123,6 +8742,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.attendanceRecordCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -8173,6 +8797,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports/{meetingAttendanceReport-id}/attendanceRecords/{attendanceRecord-id}':
     get:
@@ -8243,6 +8872,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -8298,6 +8932,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -8348,6 +8987,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports/{meetingAttendanceReport-id}/attendanceRecords/$count':
     get:
@@ -8387,6 +9031,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendanceReports/$count':
     get:
       tags:
@@ -8417,6 +9066,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/attendeeReport':
     get:
       tags:
@@ -8451,6 +9105,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -8487,6 +9146,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -8521,6 +9185,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/broadcastRecording':
     get:
       tags:
@@ -8554,6 +9223,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -8589,6 +9263,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -8622,6 +9301,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/meetingAttendanceReport':
     get:
       tags:
@@ -8675,6 +9359,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -8714,6 +9403,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -8748,6 +9442,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/meetingAttendanceReport/attendanceRecords':
     get:
@@ -8813,6 +9512,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.attendanceRecordCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -8855,6 +9559,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/meetingAttendanceReport/attendanceRecords/{attendanceRecord-id}':
     get:
@@ -8917,6 +9626,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -8964,6 +9678,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.attendanceRecord'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -9006,6 +9725,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/meetingAttendanceReport/attendanceRecords/$count':
     get:
@@ -9037,6 +9761,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/recording':
     get:
       tags:
@@ -9071,6 +9800,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -9107,6 +9841,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -9141,6 +9880,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/recordings':
     get:
       tags:
@@ -9205,6 +9949,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.callRecordingCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -9247,6 +9996,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callRecording'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/recordings/{callRecording-id}':
     get:
@@ -9312,6 +10066,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callRecording'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -9359,6 +10118,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callRecording'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -9401,6 +10165,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/recordings/{callRecording-id}/content':
     get:
@@ -9447,6 +10216,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -9495,6 +10269,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callRecording'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -9537,6 +10316,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/recordings/$count':
     get:
       tags:
@@ -9567,6 +10351,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration':
     get:
       tags:
@@ -9620,6 +10409,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistration'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -9659,6 +10453,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistration'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -9693,6 +10492,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/customQuestions':
     get:
@@ -9758,6 +10562,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.meetingRegistrationQuestionCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -9800,6 +10609,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrationQuestion'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/customQuestions/{meetingRegistrationQuestion-id}':
     get:
@@ -9862,6 +10676,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrationQuestion'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -9909,6 +10728,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrationQuestion'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -9951,6 +10775,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/customQuestions/$count':
     get:
@@ -9982,6 +10811,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/registrants':
     get:
       tags:
@@ -10046,6 +10880,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.meetingRegistrantBaseCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -10053,7 +10892,7 @@ paths:
     post:
       tags:
         - users.onlineMeeting
-      summary: Create meetingRegistrant
+      summary: Create meetingRegistrant (deprecated)
       description: 'Enroll a meeting registrant in an online meeting that has meeting registration enabled on behalf of the registrant. This operation has two scenarios: In either scenario, the registrant will receive an email notification that contains their registration information.'
       externalDocs:
         description: Find more info here
@@ -10092,6 +10931,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrantBase'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/registrants/{meetingRegistrantBase-id}':
     get:
@@ -10154,6 +10998,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrantBase'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -10201,11 +11050,16 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.meetingRegistrantBase'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
         - users.onlineMeeting
-      summary: Unenroll meeting registrant
+      summary: Unenroll meeting registrant (deprecated)
       description: 'Cancel an onlineMeeting registration for a meetingRegistrant on behalf of the registrant. Only use this method when the allowedRegistrant property of the meetingRegistration object has a value of organization and the registrant''s delegated permission was used to enroll. When the allowedRegistrant value is everyone, registrants can only use the link in the email they receive to cancel their registration.'
       externalDocs:
         description: Find more info here
@@ -10247,6 +11101,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/registration/registrants/$count':
     get:
@@ -10278,6 +11137,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/transcripts':
     get:
       tags:
@@ -10345,6 +11209,11 @@ paths:
           $ref: '#/components/responses/microsoft.graph.callTranscriptCollectionResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-pageable:
         nextLinkName: '@odata.nextLink'
         operationName: listMore
@@ -10387,6 +11256,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callTranscript'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}':
     get:
@@ -10452,6 +11326,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callTranscript'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -10499,6 +11378,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callTranscript'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -10541,6 +11425,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}/content':
     get:
@@ -10587,6 +11476,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -10635,6 +11529,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.callTranscript'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -10677,6 +11576,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/transcripts/{callTranscript-id}/metadataContent':
     get:
       tags:
@@ -10722,6 +11626,11 @@ paths:
                 format: binary
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     put:
       tags:
         - users.onlineMeeting
@@ -10766,6 +11675,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
     delete:
       tags:
         - users.onlineMeeting
@@ -10808,6 +11722,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings/{onlineMeeting-id}/transcripts/$count':
     get:
       tags:
@@ -10838,6 +11757,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/onlineMeetings(joinWebUrl=''{joinWebUrl}'')':
     get:
       tags:
@@ -10891,6 +11815,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -10930,6 +11859,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -10964,6 +11898,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
   '/users/{user-id}/onlineMeetings/$count':
     get:
@@ -10987,6 +11926,11 @@ paths:
           $ref: '#/components/responses/ODataCountResponse'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
   '/users/{user-id}/presence':
     get:
       tags:
@@ -11035,6 +11979,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.presence'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     patch:
       tags:
@@ -11066,6 +12015,11 @@ paths:
                 $ref: '#/components/schemas/microsoft.graph.presence'
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
     delete:
       tags:
@@ -11092,6 +12046,11 @@ paths:
           description: Success
         default:
           $ref: '#/components/responses/error'
+      deprecated: true
+      x-ms-deprecation:
+        removalDate: '2025-07-02'
+        date: '2024-07-02'
+        version: 2024-07/PrivatePreview:copilotExportAPI
       x-ms-docs-operation-type: operation
 components:
   schemas:
@@ -12008,6 +12967,11 @@ components:
               description: The meeting start time in UTC. Required when you create an online meeting.
               format: date-time
               nullable: true
+            aiInsights:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.callAiInsight'
+              x-ms-navigationProperty: true
             meetingAttendanceReport:
               $ref: '#/components/schemas/microsoft.graph.meetingAttendanceReport'
             recordings:
@@ -12024,6 +12988,40 @@ components:
                 $ref: '#/components/schemas/microsoft.graph.callTranscript'
               description: The transcripts of an online meeting. Read-only.
               x-ms-navigationProperty: true
+          additionalProperties:
+            type: object
+    microsoft.graph.callAiInsight:
+      allOf:
+        - $ref: '#/components/schemas/microsoft.graph.entity'
+        - title: callAiInsight
+          type: object
+          properties:
+            actionItems:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.actionItem'
+            callId:
+              type: string
+              nullable: true
+            contentCorrelationId:
+              type: string
+              nullable: true
+            createdDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              format: date-time
+              nullable: true
+            endDateTime:
+              pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+              type: string
+              format: date-time
+              nullable: true
+            meetingNotes:
+              type: array
+              items:
+                $ref: '#/components/schemas/microsoft.graph.meetingNote'
+            viewpoint:
+              $ref: '#/components/schemas/microsoft.graph.callAiInsightViewPoint'
           additionalProperties:
             type: object
     microsoft.graph.meetingAttendanceReport:
@@ -12078,7 +13076,7 @@ components:
               $ref: '#/components/schemas/microsoft.graph.identity'
             registrantId:
               type: string
-              description: Unique identifier of a meetingRegistrant. Presents when the participant has registered for the meeting.
+              description: Unique identifier of a meetingRegistrant. Presents when the participant has registered for the meeting. (deprecated)
               nullable: true
             role:
               type: string
@@ -12158,10 +13156,6 @@ components:
               nullable: true
             meetingOrganizer:
               $ref: '#/components/schemas/microsoft.graph.identitySet'
-            meetingOrganizerId:
-              type: string
-              description: The unique identifier of the organizer of the onlineMeeting related to this recording. Read-only.
-              nullable: true
             recordingContentUrl:
               type: string
               description: The URL that can be used to access the content of the recording. Read-only.
@@ -12291,10 +13285,6 @@ components:
               nullable: true
             meetingOrganizer:
               $ref: '#/components/schemas/microsoft.graph.identitySet'
-            meetingOrganizerId:
-              type: string
-              description: The unique identifier of the organizer of the onlineMeeting related to this transcript. Read-only.
-              nullable: true
             metadataContent:
               type: string
               description: The time-aligned metadata of the utterances in the transcript. Read-only.
@@ -12503,6 +13493,10 @@ components:
         isContentSharingNotificationEnabled:
           type: boolean
           description: Indicates whether content sharing notifications should be enabled for the call.
+          nullable: true
+        isDeltaRosterEnabled:
+          type: boolean
+          description: Indicates whether delta roster is enabled for the call.
           nullable: true
       additionalProperties:
         type: object
@@ -12903,12 +13897,12 @@ components:
               nullable: true
             allowBreakoutRooms:
               type: boolean
+              description: Indicates whether breakout rooms are enabled for the meeting.
               nullable: true
             allowedPresenters:
               $ref: '#/components/schemas/microsoft.graph.onlineMeetingPresenters'
             allowLiveShare:
-              type: boolean
-              nullable: true
+              $ref: '#/components/schemas/microsoft.graph.meetingLiveShareOptions'
             allowMeetingChat:
               $ref: '#/components/schemas/microsoft.graph.meetingChatMode'
             allowParticipantsToChangeName:
@@ -12917,6 +13911,7 @@ components:
               nullable: true
             allowPowerPointSharing:
               type: boolean
+              description: Indicates whether PowerPoint live is enabled for the meeting.
               nullable: true
             allowRecording:
               type: boolean
@@ -12932,6 +13927,7 @@ components:
               nullable: true
             allowWhiteboard:
               type: boolean
+              description: Indicates whether whiteboard is enabled for the meeting.
               nullable: true
             anonymizeIdentityForRoles:
               type: array
@@ -13017,6 +14013,47 @@ components:
         - questionAndAnswer
         - unknownFutureValue
       type: string
+    microsoft.graph.actionItem:
+      title: actionItem
+      type: object
+      properties:
+        ownerDisplayName:
+          type: string
+          nullable: true
+        text:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+      additionalProperties:
+        type: object
+    microsoft.graph.meetingNote:
+      title: meetingNote
+      type: object
+      properties:
+        subpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/microsoft.graph.meetingNoteSubpoint'
+        text:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+      additionalProperties:
+        type: object
+    microsoft.graph.callAiInsightViewPoint:
+      title: callAiInsightViewPoint
+      type: object
+      properties:
+        mentionEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/microsoft.graph.mentionEvent'
+      additionalProperties:
+        type: object
     microsoft.graph.attendanceInterval:
       title: attendanceInterval
       type: object
@@ -13048,11 +14085,11 @@ components:
       properties:
         displayName:
           type: string
-          description: The display name of the identity. This property is read-only.
+          description: 'The display name of the identity. For drive items, the display name might not always be available or up to date. For example, if a user changes their display name the API might show the new value in a future response, but the items associated with the user don''t show up as changed when using delta.'
           nullable: true
         id:
           type: string
-          description: The identifier of the identity. This property is read-only.
+          description: 'Unique identifier for the identity or actor. For example, in the access reviews decisions API, this property might record the id of the principal, that is, the group, user, or application that''s subject to review.'
           nullable: true
       additionalProperties:
         type: object
@@ -13269,6 +14306,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/microsoft.graph.onlineMeeting'
+        '@odata.nextLink':
+          type: string
+          nullable: true
+      additionalProperties:
+        type: object
+    microsoft.graph.callAiInsightCollectionResponse:
+      title: Collection of callAiInsight
+      type: object
+      properties:
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/microsoft.graph.callAiInsight'
         '@odata.nextLink':
           type: string
           nullable: true
@@ -13882,6 +14932,13 @@ components:
         - organizer
         - unknownFutureValue
       type: string
+    microsoft.graph.meetingLiveShareOptions:
+      title: meetingLiveShareOptions
+      enum:
+        - enabled
+        - disabled
+        - unknownFutureValue
+      type: string
     microsoft.graph.meetingChatMode:
       title: meetingChatMode
       enum:
@@ -14020,6 +15077,34 @@ components:
             type: string
             nullable: true
           description: The translation languages (choose up to 6).
+      additionalProperties:
+        type: object
+    microsoft.graph.meetingNoteSubpoint:
+      title: meetingNoteSubpoint
+      type: object
+      properties:
+        text:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+      additionalProperties:
+        type: object
+    microsoft.graph.mentionEvent:
+      title: mentionEvent
+      type: object
+      properties:
+        eventDateTime:
+          pattern: '^[0-9]{4,}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]([.][0-9]{1,12})?(Z|[+-][0-9][0-9]:[0-9][0-9])$'
+          type: string
+          format: date-time
+          nullable: true
+        speaker:
+          $ref: '#/components/schemas/microsoft.graph.identitySet'
+        transcriptUtterance:
+          type: string
+          nullable: true
       additionalProperties:
         type: object
     microsoft.graph.meetingAudience:
@@ -14272,6 +15357,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/microsoft.graph.onlineMeetingCollectionResponse'
+    microsoft.graph.callAiInsightCollectionResponse:
+      description: Retrieved collection
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/microsoft.graph.callAiInsightCollectionResponse'
     microsoft.graph.meetingAttendanceReportCollectionResponse:
       description: Retrieved collection
       content:
